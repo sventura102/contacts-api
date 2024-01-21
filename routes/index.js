@@ -1,7 +1,11 @@
-const routes = require('express').Router();
+const express = require('express');
+const routes = express.Router();
+const controller = require('../controllers');
 
-routes.get('/', (req, res, next) => {
-    res.json('Stephanie Ventura');
-});
+routes.use('/contacts', require('./contacts'))
+
+routes.get('/', controller.me);
+routes.get('/fav', controller.favoritePerson);
+routes.get('/mom', controller.motherlyPerson);
 
 module.exports = routes;

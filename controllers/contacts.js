@@ -1,3 +1,4 @@
+const { response } = require('express');
 const mongodb = require('../db/connect');
 const ObjectId = require('mongodb').ObjectId;
 
@@ -18,4 +19,34 @@ const getOne = async(req, res, next) => {
       });
 }
 
-module.exports = {getOne, getAll};
+const createContact = async(req, res, next) => {
+  const contact = {firstName: req.body.firstName, lastName: req.body.lastName, email: req.body.email, favoriteColor: req.body.favoriteColor, birthday: req.body.birthday};
+  const response = await mongodb.getDb().db('sample_mflix').collection('contacts').insertOne(contact);
+  if (response.acknowledged) { res.status(201).json(response);
+  } else {
+    res.status(500).json(response.error); 
+  }
+};
+
+const updateContact = async(req, res, next) => {
+  const byId = new ObjectId(req.paras.id);
+  const contact = {firstName: req.body.firstName, lastName: req.body.lastName, email: req.body.email, favoriteColor: req.body.favoriteColor, birthday: req.body.birthday};
+  const response = await mongodb.getDb.db('sample_mflix').collection('contacts').replaceOne({_id: byId}, contact);
+  console.log(response);
+  if (response) { res.status(204).json(response)
+  } else {
+    res.status(500).json(response.error);
+  }
+}
+
+const deleteContact = async(req, res, next) => {
+  const byId = new ObjectId(req.paras.id);
+  const response = await mongodb.getDb().db('sample_mflix').collection('contacts').remove({_id: byId}, true)
+  if (response) {
+    res.status(204).send();
+  } else {
+    res.status(500).json(response.error);
+  }
+};
+
+module.exports = {getOne, getAll, createContact, updateContact, deleteContact};

@@ -43,7 +43,7 @@ const deleteContact = async(req, res, next) => {
   const byId = new ObjectId(req.params.id);
   const response = await mongodb.getDb().db('sample_mflix').collection('contacts').deleteOne({_id: byId}, true)
   if (response) {
-    res.status(204).send();
+    res.status(200).send();
   } else {
     res.status(500).json(response.error);
   }

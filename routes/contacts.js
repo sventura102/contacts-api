@@ -1,14 +1,16 @@
 const express = require('express');
 const routes = express.Router();
 const contactsController = require('../controllers/contacts');
+const validation = require('../middlewear/validate');
+
 
 routes.get('/', contactsController.getAll);
 routes.get('/:id', contactsController.getOne);
 
 routes.post('/', contactsController.createContact);
 
-routes.put('/:id', contactsController.updateContact);
+routes.post('/', validation.saveContact, contactsController.createContact);
 
-routes.delete('/:id', contactsController.deleteContact);
+routes.put('/:id', validation.saveContact, contactsController.updateContact);
 
 module.exports = routes;
